@@ -1,0 +1,14 @@
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\bin\Debug\netcoreapp3.1\N-Puzzle.exe
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\bin\Debug\netcoreapp3.1\N-Puzzle.deps.json
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\bin\Debug\netcoreapp3.1\N-Puzzle.runtimeconfig.json
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\bin\Debug\netcoreapp3.1\N-Puzzle.runtimeconfig.dev.json
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\bin\Debug\netcoreapp3.1\N-Puzzle.dll
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\bin\Debug\netcoreapp3.1\N-Puzzle.pdb
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\obj\Debug\netcoreapp3.1\N-Puzzle.csproj.AssemblyReference.cache
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\obj\Debug\netcoreapp3.1\N-Puzzle.GeneratedMSBuildEditorConfig.editorconfig
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\obj\Debug\netcoreapp3.1\N-Puzzle.AssemblyInfoInputs.cache
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\obj\Debug\netcoreapp3.1\N-Puzzle.AssemblyInfo.cs
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\obj\Debug\netcoreapp3.1\N-Puzzle.csproj.CoreCompileInputs.cache
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\obj\Debug\netcoreapp3.1\N-Puzzle.dll
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\obj\Debug\netcoreapp3.1\N-Puzzle.pdb
+D:\ASU FCIS 2023\Year 3\Semester 2\Analysis & Design of Algorithm\Project\N-Puzzle\N-Puzzle\N-Puzzle\obj\Debug\netcoreapp3.1\N-Puzzle.genruntimeconfig.cache
