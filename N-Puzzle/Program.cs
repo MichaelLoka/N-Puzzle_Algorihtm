@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace N_Puzzle
 {
@@ -45,7 +47,7 @@ namespace N_Puzzle
         static void Main(string[] args)
         {
             // Reading the File
-            FileStream file = new FileStream(SampleTests[0], FileMode.Open, FileAccess.Read);
+            FileStream file = new FileStream(CompleteTests[2], FileMode.Open, FileAccess.Read);
             StreamReader sr = new StreamReader(file);
 
             // Getting the Problem Size
@@ -57,29 +59,10 @@ namespace N_Puzzle
             // Check if the Puzzle is Solvable
             if (CheckIsSolvable(Puzzle, PuzzleSize))
             {
-                Console.WriteLine("Solvable.\n");
-                DisplayPuzzle(Puzzle, Puzzle_1D, PuzzleSize, Empty_i_Pos, Empty_j_Pos);
-                int ManDist = ManhattanPriorityDistance(Puzzle, Puzzle_1D, PuzzleSize);
-                int HamDist = HammingPriorityDistance(Puzzle, Puzzle_1D, PuzzleSize);
-                Console.WriteLine("Manhatan Distance: " + ManDist + "\nHamming Distance: " + HamDist);
-
+                Console.WriteLine("Solvable.");
                 PuzzleNode InitialPuzzle = new PuzzleNode(Puzzle, PuzzleSize, Empty_i_Pos, Empty_j_Pos);
                 A_Star_Algorithm(InitialPuzzle, 'M'); // Manhattan Distance
 
-                PuzzleNode pn = new PuzzleNode(Puzzle, PuzzleSize, Empty_i_Pos, Empty_j_Pos);
-                PuzzleNode pnRight = new PuzzleNode(pn.RightDirection(pn));
-                DisplayPuzzle(pnRight.Puzzle, pnRight.Puzzle_1D, pnRight.S, pnRight.Empty_i_Pos, pnRight.Empty_j_Pos);
-                int RightManDist = ManhattanPriorityDistance(pnRight.Puzzle, pnRight.Puzzle_1D, pnRight.S);
-                int RightHamDist = HammingPriorityDistance(pnRight.Puzzle, pnRight.Puzzle_1D, pnRight.S);
-                Console.WriteLine("Manhatan Distance: " + RightManDist + "\nHamming Distance: " + RightHamDist);
-
-
-                PuzzleNode pn2 = new PuzzleNode(Puzzle, PuzzleSize, Empty_i_Pos, Empty_j_Pos);
-                PuzzleNode pnDown = new PuzzleNode(pn.DownDirection(pn));
-                DisplayPuzzle(pnDown.Puzzle, pnDown.Puzzle_1D, pnDown.S, pnDown.Empty_i_Pos, pnDown.Empty_j_Pos);
-                int DownManDist = ManhattanPriorityDistance(pnDown.Puzzle, pnDown.Puzzle_1D, pnDown.S);
-                int DownHamDist = HammingPriorityDistance(pnDown.Puzzle, pnDown.Puzzle_1D, pnDown.S);
-                Console.WriteLine("Manhatan Distance: " + DownManDist + "\nHamming Distance: " + DownHamDist);
             }
             else
                 Console.WriteLine("UnSolvable.");
@@ -133,7 +116,7 @@ namespace N_Puzzle
             for (int i = 0; i < Puzzle.Length; i++)
                 Puzzle_1D[i] = Puzzle[i / S, i % S];
         }
-        static void DisplayPuzzle(int[,] Puzzle, int[]Puzzle_1D, int S, int ei, int ej)
+        public static void DisplayPuzzle(int[,] Puzzle, int[]Puzzle_1D, int S, int ei, int ej)
         {
             Console.WriteLine("\n========================= Puzzle Details =========================");
             Console.WriteLine("==================================================================");
@@ -144,10 +127,13 @@ namespace N_Puzzle
                 Console.WriteLine();
             }
             Console.WriteLine("The Empty Cell is at: (" + ei + " ," + ej + ")");
-            Console.WriteLine("------------------------- 1D Array Values -------------------------");
+           /* Console.WriteLine("------------------------- 1D Array Values -------------------------");
             for (int i = 0; i < Puzzle.Length; i++)
                 Console.Write(Puzzle_1D[i] + " ");
-            Console.WriteLine();
+            Console.WriteLine();*/
+            int ManDist = ManhattanPriorityDistance(Puzzle, Puzzle_1D, S);
+            int HamDist = HammingPriorityDistance(Puzzle, Puzzle_1D, S);
+            Console.WriteLine("Manhatan Distance: " + ManDist + "\nHamming Distance: " + HamDist);
         }
         static bool CheckIsSolvable(int[,] Puzzle, int S)
         {
@@ -205,7 +191,58 @@ namespace N_Puzzle
             PuzzleNode TreeRoot = InitialPuzzle;
             NodesQueue.Enqueue(TreeRoot, Dist_Func);
 
+            TreeRoot.FeasibleMoves();
+            PuzzleNode InitialMove = MinDistance(TreeRoot);
+            NodesQueue.Enqueue(InitialMove, Dist_Func);
+
+            InitialMove.FeasibleMoves();
+            PuzzleNode NextMove = MinDistance(InitialMove);
+            NodesQueue.Enqueue(NextMove, Dist_Func);
+
+            NodesQueue.Display();
             return TreeRoot;
+        }
+        static PuzzleNode MinDistance(PuzzleNode BranchRoot)
+        {
+            Dictionary<PuzzleNode, int> ManDist = new Dictionary<PuzzleNode, int>();
+            Dictionary<PuzzleNode, int> HamDist = new Dictionary<PuzzleNode, int>();
+            if (BranchRoot.CanMoveUp)
+            {
+                PuzzleNode pn = new PuzzleNode(BranchRoot.Puzzle, BranchRoot.S, Empty_i_Pos, Empty_j_Pos);
+                PuzzleNode pnUp = new PuzzleNode(pn.UpDirection(pn));
+                int UpManDist = ManhattanPriorityDistance(pnUp.Puzzle, pnUp.Puzzle_1D, pnUp.S);
+                ManDist.Add(pnUp, UpManDist);
+                int UpHamDist = HammingPriorityDistance(pnUp.Puzzle, pnUp.Puzzle_1D, pnUp.S);
+                HamDist.Add(pnUp, UpHamDist);
+            }
+            if (BranchRoot.CanMoveRight)
+            {
+                PuzzleNode pn = new PuzzleNode(BranchRoot.Puzzle, BranchRoot.S, Empty_i_Pos, Empty_j_Pos);
+                PuzzleNode pnRight = new PuzzleNode(pn.RightDirection(pn));
+                int RightManDist = ManhattanPriorityDistance(pnRight.Puzzle, pnRight.Puzzle_1D, pnRight.S);
+                ManDist.Add(pnRight, RightManDist);
+                int RightHamDist = HammingPriorityDistance(pnRight.Puzzle, pnRight.Puzzle_1D, pnRight.S);
+                HamDist.Add(pnRight, RightManDist);
+            }
+            if (BranchRoot.CanMoveDown)
+            {
+                PuzzleNode pn = new PuzzleNode(BranchRoot.Puzzle, BranchRoot.S, Empty_i_Pos, Empty_j_Pos);
+                PuzzleNode pnDown = new PuzzleNode(pn.DownDirection(pn));
+                int DownManDist = ManhattanPriorityDistance(pnDown.Puzzle, pnDown.Puzzle_1D, pnDown.S);
+                ManDist.Add(pnDown, DownManDist);
+                int DowntHamDist = HammingPriorityDistance(pnDown.Puzzle, pnDown.Puzzle_1D, pnDown.S);
+                HamDist.Add(pnDown, DownManDist);
+            }
+            if (BranchRoot.CanMoveLeft)
+            {
+                PuzzleNode pn = new PuzzleNode(BranchRoot.Puzzle, BranchRoot.S, Empty_i_Pos, Empty_j_Pos);
+                PuzzleNode pnLeft = new PuzzleNode(pn.LeftDirection(pn));
+                int LeftManDist = ManhattanPriorityDistance(pnLeft.Puzzle, pnLeft.Puzzle_1D, pnLeft.S);
+                ManDist.Add(pnLeft, LeftManDist);
+                int LeftHamDist = HammingPriorityDistance(pnLeft.Puzzle, pnLeft.Puzzle_1D, pnLeft.S);
+                HamDist.Add(pnLeft, LeftManDist);
+            }
+            return ManDist.FirstOrDefault(x => x.Value == ManDist.Values.Min()).Key;
         }
     }
 }

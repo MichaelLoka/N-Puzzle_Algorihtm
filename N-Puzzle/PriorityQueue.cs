@@ -15,7 +15,7 @@ namespace N_Puzzle
         public void Enqueue(PuzzleNode pn, char Dist_Func)
         {
             Combinations.Add(pn);
-            UpHeapSort(Dist_Func);
+            //UpHeapSort(Dist_Func);
         }
         public PuzzleNode Dequeue()
         {
@@ -61,6 +61,14 @@ namespace N_Puzzle
                     Combinations[ParentIndex] = temp;
                     ChildIndex = ParentIndex;
                 }
+            }
+        }
+        public void Display()
+        {
+            for (int i = 0; i < Combinations.Count; i++)
+            {
+                PuzzleNode p = new PuzzleNode(Combinations[i]);
+                Program.DisplayPuzzle(p.Puzzle, p.Puzzle_1D, p.S, p.Empty_i_Pos, p.Empty_j_Pos);
             }
         }
     }
