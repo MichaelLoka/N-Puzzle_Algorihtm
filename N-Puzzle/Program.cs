@@ -40,11 +40,12 @@ namespace N_Puzzle
         static int[,] Puzzle;
         static int[] Puzzle_1D;
         static int Empty_i_Pos, Empty_j_Pos;
+        static PriorityQueue NodesQueue;
 
         static void Main(string[] args)
         {
             // Reading the File
-            FileStream file = new FileStream(SampleTests[1], FileMode.Open, FileAccess.Read);
+            FileStream file = new FileStream(SampleTests[0], FileMode.Open, FileAccess.Read);
             StreamReader sr = new StreamReader(file);
 
             // Getting the Problem Size
@@ -52,13 +53,33 @@ namespace N_Puzzle
 
             // Putting the Puzzle Values into a Matrix
             FormPuzzle(sr, PuzzleSize);
-            DisplayPuzzle(PuzzleSize);
 
+            // Check if the Puzzle is Solvable
             if (CheckIsSolvable(Puzzle, PuzzleSize))
             {
-                Console.WriteLine("Solvable.");
-                int ManDist = ManhattanPriorityDistance(Puzzle, PuzzleSize);
-                Console.WriteLine(ManDist);
+                Console.WriteLine("Solvable.\n");
+                DisplayPuzzle(Puzzle, Puzzle_1D, PuzzleSize, Empty_i_Pos, Empty_j_Pos);
+                int ManDist = ManhattanPriorityDistance(Puzzle, Puzzle_1D, PuzzleSize);
+                int HamDist = HammingPriorityDistance(Puzzle, Puzzle_1D, PuzzleSize);
+                Console.WriteLine("Manhatan Distance: " + ManDist + "\nHamming Distance: " + HamDist);
+
+                PuzzleNode InitialPuzzle = new PuzzleNode(Puzzle, PuzzleSize, Empty_i_Pos, Empty_j_Pos);
+                A_Star_Algorithm(InitialPuzzle, 'M'); // Manhattan Distance
+
+                PuzzleNode pn = new PuzzleNode(Puzzle, PuzzleSize, Empty_i_Pos, Empty_j_Pos);
+                PuzzleNode pnRight = new PuzzleNode(pn.RightDirection(pn));
+                DisplayPuzzle(pnRight.Puzzle, pnRight.Puzzle_1D, pnRight.S, pnRight.Empty_i_Pos, pnRight.Empty_j_Pos);
+                int RightManDist = ManhattanPriorityDistance(pnRight.Puzzle, pnRight.Puzzle_1D, pnRight.S);
+                int RightHamDist = HammingPriorityDistance(pnRight.Puzzle, pnRight.Puzzle_1D, pnRight.S);
+                Console.WriteLine("Manhatan Distance: " + RightManDist + "\nHamming Distance: " + RightHamDist);
+
+
+                PuzzleNode pn2 = new PuzzleNode(Puzzle, PuzzleSize, Empty_i_Pos, Empty_j_Pos);
+                PuzzleNode pnDown = new PuzzleNode(pn.DownDirection(pn));
+                DisplayPuzzle(pnDown.Puzzle, pnDown.Puzzle_1D, pnDown.S, pnDown.Empty_i_Pos, pnDown.Empty_j_Pos);
+                int DownManDist = ManhattanPriorityDistance(pnDown.Puzzle, pnDown.Puzzle_1D, pnDown.S);
+                int DownHamDist = HammingPriorityDistance(pnDown.Puzzle, pnDown.Puzzle_1D, pnDown.S);
+                Console.WriteLine("Manhatan Distance: " + DownManDist + "\nHamming Distance: " + DownHamDist);
             }
             else
                 Console.WriteLine("UnSolvable.");
@@ -104,31 +125,30 @@ namespace N_Puzzle
                     }
                 }
             }
-            ConvertTo1DPuzzle(S);
+            ConvertTo1DPuzzle(Puzzle, S);
         }
-
-        static void ConvertTo1DPuzzle(int S)
+        static void ConvertTo1DPuzzle(int[,] Puzzle, int S)
         {
             Puzzle_1D = new int[S * S];
             for (int i = 0; i < Puzzle.Length; i++)
                 Puzzle_1D[i] = Puzzle[i / S, i % S];
         }
-
-        static void DisplayPuzzle(int S)
+        static void DisplayPuzzle(int[,] Puzzle, int[]Puzzle_1D, int S, int ei, int ej)
         {
+            Console.WriteLine("\n========================= Puzzle Details =========================");
+            Console.WriteLine("==================================================================");
             for (int i = 0; i < S; i++)
             {
                 for (int j = 0; j < S; j++)
                     Console.Write(Puzzle[i, j] + " ");
                 Console.WriteLine();
             }
-            Console.WriteLine("The Empty Cell is at: (" + Empty_i_Pos + " ," + Empty_j_Pos + ")");
+            Console.WriteLine("The Empty Cell is at: (" + ei + " ," + ej + ")");
             Console.WriteLine("------------------------- 1D Array Values -------------------------");
             for (int i = 0; i < Puzzle.Length; i++)
                 Console.Write(Puzzle_1D[i] + " ");
             Console.WriteLine();
         }
-
         static bool CheckIsSolvable(int[,] Puzzle, int S)
         {
             int InversionCount = 0;
@@ -152,20 +172,40 @@ namespace N_Puzzle
                 return true;
             return false;
         }
-
-        static int ManhattanPriorityDistance (int[,] Puzzle, int S)
+        public static int ManhattanPriorityDistance (int[,] Puzzle, int[] Puzzle_1D, int S)
         {
             int ManhattanDistance = 0;
             for (int i = 0; i < Puzzle.Length; i++)
             {
                 if(Puzzle_1D[i] != i+1 && Puzzle_1D[i] != 0)
                 {
-                    int CorrectRowPosition = (Puzzle_1D[i] - 1) / S;
-                    int CorrectColumnPosition = (Puzzle_1D[i] - 1) % S;
-                    ManhattanDistance += Math.Abs(CorrectRowPosition - i/S) + Math.Abs(CorrectColumnPosition - i%S);
+                    int RowPosition = (Puzzle_1D[i] - 1) / S;
+                    int ColumnPosition = (Puzzle_1D[i] - 1) % S;
+                    int CorrectRowPosition = Math.Abs(RowPosition - i / S);
+                    int CorrectColumnPosition = Math.Abs(ColumnPosition - i % S);
+                    ManhattanDistance += CorrectRowPosition + CorrectColumnPosition;
                 }
             }
             return ManhattanDistance;
+        }
+        public static int HammingPriorityDistance (int[,] Puzzle, int[] Puzzle_1D, int S)
+        {
+            int HammingDistance = 0;
+            for (int i = 0; i < Puzzle.Length; i++)
+            {
+                if (Puzzle_1D[i] != i + 1 && Puzzle_1D[i] != 0)
+                    HammingDistance++;
+            }
+
+            return HammingDistance;
+        }
+        static PuzzleNode A_Star_Algorithm(PuzzleNode InitialPuzzle, char Dist_Func)
+        {
+            NodesQueue = new PriorityQueue();
+            PuzzleNode TreeRoot = InitialPuzzle;
+            NodesQueue.Enqueue(TreeRoot, Dist_Func);
+
+            return TreeRoot;
         }
     }
 }
