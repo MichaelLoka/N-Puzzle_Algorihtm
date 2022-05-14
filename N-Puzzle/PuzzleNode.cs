@@ -72,10 +72,12 @@ namespace N_Puzzle
             this.H_value = pn.H_value;
         }
 
+        //calculates min.cost using manhattan
         public void ManhattanMin()
         {
             this.Move_cost = this.M_value + this.DepthLevel;
         }
+        //calculates min.cost using hamming
         public void HammingMin()
         {
             this.Move_cost = this.H_value + this.DepthLevel;
@@ -164,5 +166,8 @@ namespace N_Puzzle
             LeftNode.Moves++;
             return LeftNode;
         }
+
+       
+
     }
 }

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle\\N-Puzzle\\N-Puzzle\\N-Puzzle.csproj": {}
+    "C:\\Users\\Philip\\Source\\Repos\\N-Puzzle_Algorihtm\\N-Puzzle\\N-Puzzle.csproj": {}
   },
   "projects": {
-    "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle\\N-Puzzle\\N-Puzzle\\N-Puzzle.csproj": {
+    "C:\\Users\\Philip\\Source\\Repos\\N-Puzzle_Algorihtm\\N-Puzzle\\N-Puzzle.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle\\N-Puzzle\\N-Puzzle\\N-Puzzle.csproj",
+        "projectUniqueName": "C:\\Users\\Philip\\Source\\Repos\\N-Puzzle_Algorihtm\\N-Puzzle\\N-Puzzle.csproj",
         "projectName": "N-Puzzle",
-        "projectPath": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle\\N-Puzzle\\N-Puzzle\\N-Puzzle.csproj",
-        "packagesPath": "C:\\Users\\Luka\\.nuget\\packages\\",
-        "outputPath": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle\\N-Puzzle\\N-Puzzle\\obj\\",
+        "projectPath": "C:\\Users\\Philip\\Source\\Repos\\N-Puzzle_Algorihtm\\N-Puzzle\\N-Puzzle.csproj",
+        "packagesPath": "C:\\Users\\Philip\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Philip\\Source\\Repos\\N-Puzzle_Algorihtm\\N-Puzzle\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Luka\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Philip\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -54,7 +54,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }
