@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Program.cs
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -78,6 +80,7 @@ namespace N_Puzzle
                 Console.WriteLine(sr.ReadToEnd());
             }
         }
+        //Documented
         static void DisplayCompleteCases()
         {
             for (int i = 0; i < CompleteTests.Length; i++)
@@ -88,7 +91,7 @@ namespace N_Puzzle
                 Console.WriteLine(sr.ReadToEnd());
             }
         }
-
+        //Documented
         static void FormPuzzle(StreamReader sr, int S)
         {
             Puzzle = new int[S,S];
@@ -116,6 +119,7 @@ namespace N_Puzzle
             for (int i = 0; i < Puzzle.Length; i++)
                 Puzzle_1D[i] = Puzzle[i / S, i % S];
         }
+        //Documented
         public static void DisplayPuzzle(int[,] Puzzle, int[]Puzzle_1D, int S, int ei, int ej)
         {
             Console.WriteLine("\n========================= Puzzle Details =========================");
@@ -174,6 +178,7 @@ namespace N_Puzzle
             }
             return ManhattanDistance;
         }
+        //Documented
         public static int HammingPriorityDistance (int[,] Puzzle, int[] Puzzle_1D, int S)
         {
             int HammingDistance = 0;
@@ -185,6 +190,7 @@ namespace N_Puzzle
 
             return HammingDistance;
         }
+        //Documented
         static PuzzleNode A_Star_Algorithm(PuzzleNode InitialPuzzle, char Dist_Func)
         {
             NodesQueue = new PriorityQueue();

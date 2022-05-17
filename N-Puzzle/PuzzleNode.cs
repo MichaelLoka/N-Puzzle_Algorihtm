@@ -1,4 +1,6 @@
-﻿using System;
+﻿//PuzzleNode.cs
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
