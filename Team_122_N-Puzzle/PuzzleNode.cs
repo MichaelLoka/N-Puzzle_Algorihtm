@@ -6,22 +6,22 @@ namespace Team_122_N_Puzzle
 {
     class PuzzleNode
     {
-        public int[,] Puzzle;
+        public int[,] Puzzle;   // 2D Board
         public int[] Puzzle_1D;
 
-        public int S;
-        public int DepthLevel;
-        public int Dist_value; //Hamming
+        public int S;           // Puzzle Size
+        public int DepthLevel;  // Tree Branch Level (# of Moves)
+        public int Dist_value;  // Manhattan or Hamming
         public int Empty_i_Pos;
         public int Empty_j_Pos;
         public int Moves = 0;
         public int Move_cost;
-        public string Move_dir;
+        public string Move_dir; // The Last Direction that the Empty Cell Moved
         public string MainKey;
-        public int TotalCost;
+        public int TotalCost;   // Distance Function + Number of Moves
 
         public PuzzleNode Parent;
-        public List<PuzzleNode> Children;
+        public List<PuzzleNode> Children;   // List of Possible Puzzle Nodes Combinations
 
         public bool CanMoveUp = false;
         public bool CanMoveRight = false;
@@ -66,104 +66,71 @@ namespace Team_122_N_Puzzle
             this.Dist_value = pn.Dist_value;
         }
 
-        public int ManCheckOptimal(PuzzleNode pn, int N, int LastEmpty_i_Pos, int LastEmpty_j_Pos)
+        public void NextMove(bool IsManhattan)
         {
-            int Manhatten = pn.Dist_value;
-            int ParentCorrectPositon = LastEmpty_i_Pos * pn.S + LastEmpty_j_Pos;
-            if (ParentCorrectPositon != N)
-                Manhatten += ManCal(pn, N, pn.Empty_i_Pos, pn.Empty_j_Pos) - ManCal(pn, N, LastEmpty_i_Pos, LastEmpty_j_Pos);
-            else
-                Manhatten++;
-            return Manhatten;
+            this.FeasibleMoves();   // Calculating the Possible Moves for the Current Board
+            if (this.CanMoveUp)
+                this.UpDirection(IsManhattan);  // Creating a New Board After Moving the Empty Cell Upwards
+            if (this.CanMoveRight)
+                this.RightDirection(IsManhattan);   // Creating a New Board After Moving the Empty Cell to the Right
+            if (this.CanMoveDown)
+                this.DownDirection(IsManhattan);    // Creating a New Board After Moving the Empty Cell Downwards
+            if (this.CanMoveLeft)
+                this.LeftDirection(IsManhattan);    // Creating a New Board After Moving the Empty Cell to the Left
         }
-        public int ManCal(PuzzleNode pn, int N, int LastEmpty_i_Pos, int LastEmpty_j_Pos)
-        {
-            int i_Pos = N / pn.S;
-            int j_Pos = N % pn.S;
-            int CorrectRowPosition = Math.Abs(i_Pos - LastEmpty_i_Pos);
-            int CorrectColumnPosition = Math.Abs(j_Pos - LastEmpty_j_Pos);
-            return CorrectRowPosition + CorrectColumnPosition;
-        }
-        public int HamCheckOptimal(PuzzleNode pn, int N, int LastEmpty_i_Pos, int LastEmpty_j_Pos)
-        {
-            int Ham = pn.Dist_value;
-            int ChildCorrectPosition = pn.Empty_i_Pos * pn.S + pn.Empty_j_Pos;
-            int ParentCorrectPositon = LastEmpty_i_Pos * pn.S + LastEmpty_j_Pos;
-            if (ParentCorrectPositon == N - 1)
-                Ham++;
-            else if (ChildCorrectPosition == N - 1)
-                Ham--;
-            return Ham;
-        }
-
         public void FeasibleMoves()
         {
-            if (this.Empty_i_Pos > 0)
+            if (this.Empty_i_Pos > 0)       // Not at the Top Row
                 this.CanMoveUp = true;
-            if (this.Empty_i_Pos + 1 < S)
-                this.CanMoveDown = true;
-            if (this.Empty_j_Pos > 0)
-                this.CanMoveLeft = true;
-            if (this.Empty_j_Pos + 1 < S)
-                this.CanMoveRight = true;
+            if (this.Empty_j_Pos + 1 < S)   // Not at the Right Most Column
+                this.CanMoveRight = true;   
+            if (this.Empty_i_Pos + 1 < S)   // Not at the Bottom Row
+                this.CanMoveDown = true;    
+            if (this.Empty_j_Pos > 0)       // Not at the Left Most Column
+                this.CanMoveLeft = true;    
         }
+
         public void UpDirection(bool IsManhattan)
         {
             int[,] UpBranch = new int[S, S];
+            // Coping the Values of the Current Board to the New Board
             for (int i = 0; i < Puzzle.Length; i++)
                 UpBranch[i / S, i % S] = Puzzle[i / S, i % S];
 
-            PuzzleNode CurrNode = this;
+            PuzzleNode CurrNode = this;     // Parent Node Before Moving Up
+            // Getting the Number Above the Empty Cell
             int IndexAbove_0 = UpBranch[Empty_i_Pos - 1, Empty_j_Pos];
 
             int DistanceFunction = 0;
+            // Returning the Zero Index of the Current Node
             if (IsManhattan)
                 DistanceFunction = ManCheckOptimal(CurrNode, IndexAbove_0 - 1, Empty_i_Pos - 1, Empty_j_Pos);
             else
                 DistanceFunction = HamCheckOptimal(CurrNode, IndexAbove_0, Empty_i_Pos - 1, Empty_j_Pos);
 
-            int Move = CurrNode.DepthLevel + 1;
-            PuzzleNode t1 = new PuzzleNode(UpBranch, S, Empty_i_Pos - 1, Empty_j_Pos, DistanceFunction, Move, CurrNode);
+            int Move = CurrNode.DepthLevel + 1; // New Board Move (Next Level)
+            // Creating the New Puzzle Board with the New Move
+            PuzzleNode UpBoard = new PuzzleNode(UpBranch, S, Empty_i_Pos - 1, Empty_j_Pos, DistanceFunction, Move, CurrNode);
+            UpBoard.Move_dir = "Upwards <↑>";
 
+            // Substituting the Empty Cell with the Number Above it
             int temp = UpBranch[Empty_i_Pos, Empty_j_Pos];
             UpBranch[Empty_i_Pos, Empty_j_Pos] = UpBranch[Empty_i_Pos - 1, Empty_j_Pos];
             UpBranch[Empty_i_Pos - 1, Empty_j_Pos] = temp;
 
+            // Checking that the New Node Doesn't Return Back to the Old Position
             if ((CurrNode.Parent == null || CurrNode.Parent.Empty_i_Pos != Empty_i_Pos - 1 || CurrNode.Parent.Empty_j_Pos != Empty_j_Pos))
-                Children.Add(t1);
-        }
-        public void DownDirection(bool IsManhattan)
-        {
-            int[,] DownBranch = new int[S, S];
-            for (int i = 0; i < Puzzle.Length; i++)
-                DownBranch[i / S, i % S] = Puzzle[i / S, i % S];
-
-            PuzzleNode CurrNode = this;
-            int IndexBelow_0 = DownBranch[Empty_i_Pos + 1, Empty_j_Pos];
-
-            int DistanceFunction = 0;
-            if (IsManhattan)
-                DistanceFunction = ManCheckOptimal(CurrNode, IndexBelow_0 - 1, Empty_i_Pos + 1, Empty_j_Pos);
-            else
-                DistanceFunction = HamCheckOptimal(CurrNode, IndexBelow_0, Empty_i_Pos + 1, Empty_j_Pos);
-
-            int Move = CurrNode.DepthLevel + 1;
-            PuzzleNode t2 = new PuzzleNode(DownBranch, S, Empty_i_Pos + 1, Empty_j_Pos, DistanceFunction, Move, CurrNode);
-
-            int t = DownBranch[Empty_i_Pos + 1, Empty_j_Pos];
-            DownBranch[Empty_i_Pos + 1, Empty_j_Pos] = DownBranch[Empty_i_Pos, Empty_j_Pos];
-            DownBranch[Empty_i_Pos, Empty_j_Pos] = t;
-
-            if ((CurrNode.Parent == null || CurrNode.Parent.Empty_i_Pos != Empty_i_Pos + 1 || CurrNode.Parent.Empty_j_Pos != Empty_j_Pos))
-                Children.Add(t2);
+                Children.Add(UpBoard);
         }
         public void RightDirection(bool IsManhattan)
         {
             int[,] RightBranch = new int[S, S];
+            // Coping the Values of the Current Board to the New Board
             for (int i = 0; i < Puzzle.Length; i++)
                 RightBranch[i / S, i % S] = Puzzle[i / S, i % S];
 
             PuzzleNode CurrNode = this;
+            // Getting the Number To the Right of the Empty Cell
             int IndexRight_0 = RightBranch[Empty_i_Pos, Empty_j_Pos + 1];
 
             int DistanceFunction = 0;
@@ -173,22 +140,59 @@ namespace Team_122_N_Puzzle
                 DistanceFunction = HamCheckOptimal(CurrNode, IndexRight_0, Empty_i_Pos, Empty_j_Pos + 1);
 
             int Move = CurrNode.DepthLevel + 1;
-            PuzzleNode t4 = new PuzzleNode(RightBranch, S, Empty_i_Pos, Empty_j_Pos + 1, DistanceFunction, Move, CurrNode);
+            // Creating the New Puzzle Board with the New Move
+            PuzzleNode RightBoard = new PuzzleNode(RightBranch, S, Empty_i_Pos, Empty_j_Pos + 1, DistanceFunction, Move, CurrNode);
+            RightBoard.Move_dir = "Right -> ";
 
-            int t = RightBranch[Empty_i_Pos, Empty_j_Pos];
+            // Substituting the Empty Cell with the Number to the Right of it
+            int temp = RightBranch[Empty_i_Pos, Empty_j_Pos];
             RightBranch[Empty_i_Pos, Empty_j_Pos] = RightBranch[Empty_i_Pos, Empty_j_Pos + 1];
-            RightBranch[Empty_i_Pos, Empty_j_Pos + 1] = t;
+            RightBranch[Empty_i_Pos, Empty_j_Pos + 1] = temp;
 
+            // Checking that the New Node Doesn't Return Back to the Old Position
             if ((CurrNode.Parent == null || CurrNode.Parent.Empty_i_Pos != Empty_i_Pos || CurrNode.Parent.Empty_j_Pos != Empty_j_Pos + 1))
-                Children.Add(t4);
+                Children.Add(RightBoard);
+        }
+        public void DownDirection(bool IsManhattan)
+        {
+            int[,] DownBranch = new int[S, S];
+            // Coping the Values of the Current Board to the New Board
+            for (int i = 0; i < Puzzle.Length; i++)
+                DownBranch[i / S, i % S] = Puzzle[i / S, i % S];
+
+            PuzzleNode CurrNode = this;
+            // Getting the Number Below the Empty Cell
+            int IndexBelow_0 = DownBranch[Empty_i_Pos + 1, Empty_j_Pos];
+
+            int DistanceFunction = 0;
+            if (IsManhattan)
+                DistanceFunction = ManCheckOptimal(CurrNode, IndexBelow_0 - 1, Empty_i_Pos + 1, Empty_j_Pos);
+            else
+                DistanceFunction = HamCheckOptimal(CurrNode, IndexBelow_0, Empty_i_Pos + 1, Empty_j_Pos);
+
+            int Move = CurrNode.DepthLevel + 1;
+            // Creating the New Puzzle Board with the New Move
+            PuzzleNode DownBoard = new PuzzleNode(DownBranch, S, Empty_i_Pos + 1, Empty_j_Pos, DistanceFunction, Move, CurrNode);
+            DownBoard.Move_dir = "Downwards <↓>";
+
+            // Substituting the Empty Cell with the Number Below it
+            int temp = DownBranch[Empty_i_Pos + 1, Empty_j_Pos];
+            DownBranch[Empty_i_Pos + 1, Empty_j_Pos] = DownBranch[Empty_i_Pos, Empty_j_Pos];
+            DownBranch[Empty_i_Pos, Empty_j_Pos] = temp;
+
+            // Checking that the New Node Doesn't Return Back to the Old Position
+            if ((CurrNode.Parent == null || CurrNode.Parent.Empty_i_Pos != Empty_i_Pos + 1 || CurrNode.Parent.Empty_j_Pos != Empty_j_Pos))
+                Children.Add(DownBoard);
         }
         public void LeftDirection(bool IsManhattan)
         {
             int[,] LeftBranch = new int[S, S];
+            // Coping the Values of the Current Board to the New Board
             for (int i = 0; i < Puzzle.Length; i++)
                 LeftBranch[i / S, i % S] = Puzzle[i / S, i % S];
 
             PuzzleNode CurrNode = this;
+            // Getting the Number to the Left the Empty Cell
             int IndexLeft_0 = LeftBranch[Empty_i_Pos, Empty_j_Pos - 1];
 
             int DistanceFunction = 0;
@@ -198,26 +202,57 @@ namespace Team_122_N_Puzzle
                 DistanceFunction = HamCheckOptimal(CurrNode, IndexLeft_0, Empty_i_Pos, Empty_j_Pos - 1);
 
             int Move = CurrNode.DepthLevel + 1;
-            PuzzleNode t3 = new PuzzleNode(LeftBranch, S, Empty_i_Pos, Empty_j_Pos - 1, DistanceFunction, Move, CurrNode);
+            // Creating the New Puzzle Board with the New Move
+            PuzzleNode LeftBoard = new PuzzleNode(LeftBranch, S, Empty_i_Pos, Empty_j_Pos - 1, DistanceFunction, Move, CurrNode);
+            LeftBoard.Move_dir = "Left <-";
 
-            int t = LeftBranch[Empty_i_Pos, Empty_j_Pos];
+            // Substituting the Empty Cell with the Number to the Left it
+            int temp = LeftBranch[Empty_i_Pos, Empty_j_Pos];
             LeftBranch[Empty_i_Pos, Empty_j_Pos] = LeftBranch[Empty_i_Pos, Empty_j_Pos - 1];
-            LeftBranch[Empty_i_Pos, Empty_j_Pos - 1] = t;
+            LeftBranch[Empty_i_Pos, Empty_j_Pos - 1] = temp;
 
+            // Checking that the New Node Doesn't Return Back to the Old Position
             if ((CurrNode.Parent == null || CurrNode.Parent.Empty_i_Pos != Empty_i_Pos || CurrNode.Parent.Empty_j_Pos != Empty_j_Pos - 1))
-                Children.Add(t3);
+                Children.Add(LeftBoard);
         }
-        public void NextMove(bool IsManhattan)
+
+        public int ManCheckOptimal(PuzzleNode pn, int N, int LastEmpty_i_Pos, int LastEmpty_j_Pos)
         {
-            this.FeasibleMoves();
-            if (this.CanMoveUp)
-                this.UpDirection(IsManhattan);
-            if (this.CanMoveDown)
-                this.DownDirection(IsManhattan);
-            if (this.CanMoveRight)
-                this.RightDirection(IsManhattan);
-            if (this.CanMoveLeft)
-                this.LeftDirection(IsManhattan);
+            int Manhatten = pn.Dist_value;
+            // Parent Empty Cell Position
+            int ParentCorrectPositon = LastEmpty_i_Pos * pn.S + LastEmpty_j_Pos;
+            // Checking the Parent Empty Cell Position Relative to the Next Move
+            if (ParentCorrectPositon != N)
+                Manhatten += ManCal(pn, N, pn.Empty_i_Pos, pn.Empty_j_Pos) - ManCal(pn, N, LastEmpty_i_Pos, LastEmpty_j_Pos);
+            else
+                Manhatten++;
+            return Manhatten;
         }
+        public int ManCal(PuzzleNode pn, int N, int LastEmpty_i_Pos, int LastEmpty_j_Pos)
+        {
+            int i_Pos = N / pn.S;   // Current Row Index
+            int j_Pos = N % pn.S;   // Current Column Index
+            // Distance Between Current Row Index & Correct Row Index
+            int CorrectRowPosition = Math.Abs(i_Pos - LastEmpty_i_Pos);
+            // Distance Between Current Column Index & Correct Column Index
+            int CorrectColumnPosition = Math.Abs(j_Pos - LastEmpty_j_Pos);
+            return CorrectRowPosition + CorrectColumnPosition;
+        }
+        public int HamCheckOptimal(PuzzleNode pn, int N, int LastEmpty_i_Pos, int LastEmpty_j_Pos)
+        {
+            int Ham = pn.Dist_value;
+            // Current Empty Cell Position
+            int ChildCorrectPosition = pn.Empty_i_Pos * pn.S + pn.Empty_j_Pos;
+            // Parrent Empty Cell Position
+            int ParentCorrectPositon = LastEmpty_i_Pos * pn.S + LastEmpty_j_Pos;
+            // Checking the Parent Empty Cell Positon Relative to the Next Move
+            if (ParentCorrectPositon == N - 1)
+                Ham++;
+            // Checking the Child Empty Cell Positon Relative to the Next Move
+            else if (ChildCorrectPosition == N - 1)
+                Ham--;
+            return Ham;
+        }
+
     }
 }

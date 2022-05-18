@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\Team_122_N-Puzzle\\Team_122_N-Puzzle\\Team_122_N-Puzzle.csproj": {}
+    "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle_Algorihtm-main\\Team_122_N-Puzzle\\Team_122_N-Puzzle.csproj": {}
   },
   "projects": {
-    "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\Team_122_N-Puzzle\\Team_122_N-Puzzle\\Team_122_N-Puzzle.csproj": {
+    "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle_Algorihtm-main\\Team_122_N-Puzzle\\Team_122_N-Puzzle.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\Team_122_N-Puzzle\\Team_122_N-Puzzle\\Team_122_N-Puzzle.csproj",
+        "projectUniqueName": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle_Algorihtm-main\\Team_122_N-Puzzle\\Team_122_N-Puzzle.csproj",
         "projectName": "Team_122_N-Puzzle",
-        "projectPath": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\Team_122_N-Puzzle\\Team_122_N-Puzzle\\Team_122_N-Puzzle.csproj",
+        "projectPath": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle_Algorihtm-main\\Team_122_N-Puzzle\\Team_122_N-Puzzle.csproj",
         "packagesPath": "C:\\Users\\Luka\\.nuget\\packages\\",
-        "outputPath": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\Team_122_N-Puzzle\\Team_122_N-Puzzle\\obj\\",
+        "outputPath": "D:\\ASU FCIS 2023\\Year 3\\Semester 2\\Analysis & Design of Algorithm\\Project\\N-Puzzle_Algorihtm-main\\Team_122_N-Puzzle\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Luka\\AppData\\Roaming\\NuGet\\NuGet.Config",
